@@ -22,6 +22,8 @@ public class GifController {
     public GifSearchResult gifSearch(@RequestParam(name = "searchTerm") String searchTerm) throws Exception{
         ArrayList<GifData> result = new ArrayList<>();
 
+        // In the case where multiple searchTerm params are passed, the value returned is comma separated searchTerms
+        // that would need to be split and iterate through for accurate results.
         String[] searchTermsList = searchTerm.split(",");
         for (String term: searchTermsList){
             result.add(gifService.getBatchGifData(term));

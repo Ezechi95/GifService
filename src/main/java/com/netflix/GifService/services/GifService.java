@@ -24,6 +24,8 @@ public class GifService {
     private static final String gifSearchUrl = "https://api.giphy.com/v1/gifs/search";
 
     public GiphyResponse getGiphy(String searchTerm, int offset) throws Exception{
+        // Default height for all gifs return
+        // TODO: Allow user to enter desired height for gifs returned.
         int height = 270;
         Gson gson = new Gson();
 
@@ -40,6 +42,7 @@ public class GifService {
         Type responseType = new TypeToken<GiphyResponse>(){}.getType();
         GiphyResponse giphyResponse = gson.fromJson(getResponse.body(), responseType);
 
+        // Filter results to only data that match the height requirements
         giphyResponse.setData((ArrayList<Giphy>) giphyResponse.getData().stream()
                 .filter(c -> c.getImages().getOriginal().getHeight().equals(String.valueOf(height)))
                 .collect(Collectors.toList()));
@@ -48,14 +51,18 @@ public class GifService {
     }
 
     public GifData getBatchGifData(String searchTerm) throws Exception {
+        // Initial offset of 0
         int offset = 0;
         GifData gifData = new GifData();
         gifData.setSearch_term(searchTerm);
 
+        // Create list of Gifs for searchTerm provided
         ArrayList<Gif> gifList = new ArrayList<>();
         while(gifList.size() < 10){
             GiphyResponse giphyResponse = getGiphy(searchTerm, offset);
+            // Convert the response into a list of gifs
             gifList = parseIntoGifList(giphyResponse, gifList);
+            // Increase offset by 10, to allow pagination through the search results
             offset = offset + 10;
         }
 
