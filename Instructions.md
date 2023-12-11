@@ -11,7 +11,7 @@ To build project, execute the following command in terminal:
 
 ### How to Run tests
 To run tests, execute the following command in terminal:
-`./gradlew clean test`
+`gradle clean test`
 
 _Note: Tests will also run with every `gradle clean build`._
 
